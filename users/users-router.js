@@ -3,8 +3,18 @@ const router = require("express").Router();
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
 
-router.get("/", restricted, checkRole(["student", "admin"]), (req, res) => {
-  Users.find()
+// // get for all users
+// router.get("/", restricted, checkRole(["student", "admin"]), (req, res) => {
+//   Users.find()
+//     .then(users => {
+//       res.json(users);
+//     })
+//     .catch(err => res.send(err));
+// });
+
+// get for only users in your department
+router.get("/", restricted, (req, res) => {
+  Users.findBy( { department: req.decodedJwt.department })
     .then(users => {
       res.json(users);
     })
